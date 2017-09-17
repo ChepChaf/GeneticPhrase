@@ -13,13 +13,13 @@ class DNA:
         self.gene_size = gene_size
         self.fitness = 0
     def mutate(self, mutation_number):
-        genes = list(self.genes)
-        random_num = random.random()   
-
+        genes = list(self.genes) 
         for i in xrange(self.gene_size):
+            random_num = random.random()  
             if mutation_number > random_num:
                 genes[i] = get_random_letter()
-
+            else:
+                genes[i] = self.genes[i]
         self.genes = "".join(genes)
     def crossover(self, dna_b):
         division = random.randint(0, self.gene_size-1)
@@ -61,7 +61,7 @@ class Population:
             pop_b = random.choice(pool)
             
             pop_c = pop_a.crossover(pop_b)
-            pop_c.mutate(0.1)
+            pop_c.mutate(0.01)
             
             population.append(pop_c)
         self.population = population
