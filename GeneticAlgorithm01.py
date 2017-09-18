@@ -39,15 +39,19 @@ class DNA:
 class Population:
     def __init__(self, population_size, target):
         self.population_size = population_size
-        self.population_a_size = population_size / 2
-        self.population_b_size = population_size - self.population_a_size
+        self.target_a_size = len(target) / 2
+        self.target_b_size = len(target) - self.target_a_size
         self.target = target
+
+        self.target_a = self.target[0:self.target_a_size]
+        self.target_b = "".join(self.target.rsplit(self.target_a))
+
         self.population_a = []
         self.population_b = []
-        for i in xrange(self.population_a_size):
-            self.population_a.append(DNA(len(target)))
-        for i in xrange(self.population_b_size):
-            self.population_b.append(DNA(len(target)))
+        for i in xrange(self.target_a_size):
+            self.population_a.append(DNA(self.target_a_size))
+        for i in xrange(self.target_b_size):
+            self.population_b.append(DNA(self.target_b_size))
 
     def new_population(self, population_size):
         pop = []
@@ -61,17 +65,17 @@ class Population:
         if self.best_fitted()["a"].fitness == 100 and self.best_fitted()["b"].fitness == 100:
             return True
         for pop in self.population_a:
-            for i in xrange(pop.calculate_fitness(self.target)):
+            for i in xrange(pop.calculate_fitness(self.target_a)):
                 pool_a.append(pop)
         for pop in self.population_b:
-            for i in xrange(pop.calculate_fitness(self.target)):
+            for i in xrange(pop.calculate_fitness(self.target_b)):
                 pool_b.append(pop)
 
         if len(pool_a) == 0:
-            self.population_a = new_population(self.population_a_size)
+            self.population_a = new_population(self.target_a_size)
             return False
         if len(pool_b) == 0:
-            self.population_b = new_population(self.population_b_size)
+            self.population_b = new_population(self.target_b_size)
         
         population_a = []
         population_b = []
@@ -105,12 +109,12 @@ class Population:
         best_b_fit = 0
 
         for pop in self.population_a:
-            fit = pop.calculate_fitness(self.target)
+            fit = pop.calculate_fitness(self.target_a)
             if fit > best_a_fit:
                 best_a_fit = fit
                 best_a = pop
         for pop in self.population_b:
-            fit = pop.calculate_fitness(self.target)
+            fit = pop.calculate_fitness(self.target_b)
             if fit > best_b_fit:
                 best_b_fit = fit
                 best_b = pop
